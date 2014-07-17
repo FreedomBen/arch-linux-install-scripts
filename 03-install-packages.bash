@@ -108,10 +108,12 @@ fi
 if $(egrep "vmx|svm" /proc/cpuinfo > /dev/null); then
     echo "Your CPU supports virtual machine hardware acceleration"
     read -p "Do you want to install libvirt/QEMU/KVM?: " LIBVIRT
+    read -p "Do you want to install VirtualBox?: " VBOX
 else
     echo "Your CPU DOES NOT support virtual machine hardware acceleration."
     echo "You can install libvirt/QEMU without KVM but it will run dog slow."
     read -p "Do you want to install libvirt/QEMU anyway (without KVM)?: " LIBVIRT
+    read -p "Do you want to install VirtualBox?: " VBOX
 fi
 
 # read -p "Do you want to install Netflix?: " NETFLIX
@@ -251,6 +253,23 @@ if [ -n "$GROUPS" ] && [ -n "$USERNAME" ]; then
     usermod -a -G audio,lp,optical,storage,video,wheel,games,power,scanner $USERNAME
 fi
 
+
+# Install VirtualBox
+if [ "$VBOX" = "Y" -o "$VBOX" = "y" ]; then
+    VBOX_CONF="/etc/modules-load.d/virtualbox.conf"
+
+    pacman -S --noconfirm --needed virtualbox virtualbox-host-modules qt4
+    pacman -S --noconfirm --needed net-tools
+    pacman -S --noconfirm --needed virtualbox-guest-iso
+
+    echo "vboxdrv" > "$VBOX_CONF"
+    echo "vboxnetadp" >> "$VBOX_CONF"
+    echo "vboxnetflt" >> "$VBOX_CONF"
+    echo "vboxpci" >> "$VBOX_CONF"
+
+    groupadd vboxusers
+    usermod -a -G vboxusers $USERNAME
+fi
 
 # Install libvirt
 if [ "$LIBVIRT" = "Y" -o "$LIBVIRT" = "y" ]; then
