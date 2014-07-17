@@ -104,6 +104,11 @@ if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
     read -p "Do you want to install Network Manager?: " NETMAN
 fi
 
+LIBREOFFICE=n
+if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
+    read -p "Do you want to install LibreOffice?: " LIBREOFFICE
+fi
+
 # Ask about installing libvirt if the CPU supports virtualization
 if $(egrep "vmx|svm" /proc/cpuinfo > /dev/null); then
     echo "Your CPU supports virtual machine hardware acceleration"
@@ -202,6 +207,12 @@ if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
     pacman -S --noconfirm --needed gst-plugins-bad
     pacman -S --noconfirm --needed gst-plugins-ugly
     pacman -S --noconfirm --needed vino vinagre # VLC server and remote viewer Gnome style
+
+    if [ "$LIBREOFFICE" = "y" -o "$LIBREOFFICE" = "Y" ]; then
+        pacman -S --noconfirm --needed libreoffice-base libreoffice-calc libreoffice-common \
+        libreoffice-draw libreoffice-en-US libreoffice-gnome libreoffice-impress libreoffice-math \
+        libreoffice-writer
+    fi
 
     # Install Network Manager
     # If Network Manager needs to be disabled, it should be masked because it automatically starts through dbus
@@ -304,7 +315,7 @@ fi
 
 # Enable desired services 
 
-# We need ntpd if we didn't isntall NetworkManager
+# We need ntpd if we didn't install NetworkManager
 if ! [ "$NETMAN" = "Y" -o "$NETMAN" = "y" ]; then
     echo "Enabling and starting ntpd..."
     systemctl enable ntpd.service
