@@ -154,6 +154,7 @@ pacman -S --noconfirm --needed openssh
 
 aurinstall "https://aur.archlinux.org/packages/co/cower/cower.tar.gz"
 aurinstall anything-sync-daemon
+aurinstall wavemon
 
 if [ "$INSYNC" = "Y" -o "$INSYNC" = "y" ]; then
     aurinstall insync
