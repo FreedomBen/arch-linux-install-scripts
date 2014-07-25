@@ -96,6 +96,7 @@ if [ -n "$USERNAME" ]; then
     fi
 fi
 
+read -p "Do you want to install the CK kernel?: " LINUXCK
 read -p "Do you want to install a graphical environment (Gnome)?: " GNOME
 
 NETMAN=n
@@ -269,6 +270,11 @@ fi
 # Install VirtualBox
 if [ "$VBOX" = "Y" -o "$VBOX" = "y" ]; then
     VBOX_CONF="/etc/modules-load.d/virtualbox.conf"
+
+    if [ "$LINUXCK" = "y" -o "$LINUXCK" = "Y" ]; then
+        pacman -S --noconfirm --needed dkms virtualbox-host-dkms virtualbox-guest-dkms
+        aurinstall virtualbox-ck-host-modules
+    fi
 
     pacman -S --noconfirm --needed virtualbox virtualbox-host-modules qt4
     pacman -S --noconfirm --needed net-tools
