@@ -273,6 +273,29 @@ if [ -n "$GROUPS" ] && [ -n "$USERNAME" ]; then
     usermod -a -G audio,lp,optical,storage,video,wheel,games,power,scanner $USERNAME
 fi
 
+# Install linux-ck if the user so desires
+if [ "$LINUXCK" = "y" -o "$LINUXCK" = "Y" ]; then
+    cd /tmp
+    mkdir -p linuxckbuild
+    cd linuxckbuild
+    cower -d linux-ck
+    cd linux-ck
+
+    # Enable BFQ in the makepkg
+    while read line; do
+        if $(echo "$line" | grep "_BFQ_enable_" >/dev/null); then
+            echo "_BGQ_enable_=y" >> PKGBUILD.TMP
+        else
+            echo "$line" >> PKGBUILD.TMP
+        fi
+    done < PKGBUILD
+
+    cp PKGBUILD.TMP PKGBUILD
+    makepkg --syncdeps --noconfirm --install
+
+    # Regenerate Grub configuration to include this new kernel
+    grub-mkconfig -o /boot/grub/grub.cfg
+fi
 
 # Install VirtualBox
 if [ "$VBOX" = "Y" -o "$VBOX" = "y" ]; then
