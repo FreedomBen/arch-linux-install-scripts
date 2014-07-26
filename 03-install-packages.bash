@@ -98,6 +98,9 @@ fi
 
 read -p "Do you want to install the CK kernel?: " LINUXCK
 read -p "Do you want to install a graphical environment (Gnome)?: " GNOME
+read -p "Do you want to install the offline wiki docs? (around 130 MB): " OFFLINEDOCS
+# Offline wiki docs are installed to /usr/share/doc/arch-wiki
+
 
 NETMAN=n
 if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
@@ -159,6 +162,10 @@ aurinstall wavemon
 
 if [ "$INSYNC" = "Y" -o "$INSYNC" = "y" ]; then
     aurinstall insync
+fi
+
+if [ "$OFFLINEDOCS" = "Y" -o "$OFFLINEDOCS" = "y" ]; then
+    pacman -S --noconfirm --needed arch-wiki-docs arch-wiki-lite
 fi
 
 
