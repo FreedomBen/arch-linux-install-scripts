@@ -96,6 +96,7 @@ if [ -n "$USERNAME" ]; then
     fi
 fi
 
+read -p "Are you installing this as a guest VirtualBox VM?" GUESTVM
 read -p "Do you want to install the CK kernel?: " LINUXCK
 read -p "Do you want to install a graphical environment (Gnome)?: " GNOME
 read -p "Do you want to install the offline wiki docs? (around 130 MB): " OFFLINEDOCS
@@ -113,16 +114,18 @@ if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
     read -p "Do you want to install LibreOffice?: " LIBREOFFICE
 fi
 
-# Ask about installing libvirt if the CPU supports virtualization
-if $(egrep "vmx|svm" /proc/cpuinfo > /dev/null); then
-    echo "Your CPU supports virtual machine hardware acceleration"
-    read -p "Do you want to install libvirt/QEMU/KVM?: " LIBVIRT
-    read -p "Do you want to install VirtualBox?: " VBOX
-else
-    echo "Your CPU DOES NOT support virtual machine hardware acceleration."
-    echo "You can install libvirt/QEMU without KVM but it will run dog slow."
-    read -p "Do you want to install libvirt/QEMU anyway (without KVM)?: " LIBVIRT
-    read -p "Do you want to install VirtualBox?: " VBOX
+# Ask about installing libvirt if the CPU supports virtualization and we're not in a VBox already
+if [ "$GUESTVM" != "Y" ] && [ "$GUESTVM" != "y" ]; then
+    if $(egrep "vmx|svm" /proc/cpuinfo > /dev/null); then
+        echo "Your CPU supports virtual machine hardware acceleration"
+        read -p "Do you want to install libvirt/QEMU/KVM?: " LIBVIRT
+        read -p "Do you want to install VirtualBox?: " VBOX
+    else
+        echo "Your CPU DOES NOT support virtual machine hardware acceleration."
+        echo "You can install libvirt/QEMU without KVM but it will run dog slow."
+        read -p "Do you want to install libvirt/QEMU anyway (without KVM)?: " LIBVIRT
+        read -p "Do you want to install VirtualBox?: " VBOX
+    fi
 fi
 
 # read -p "Do you want to install Netflix?: " NETFLIX
@@ -299,6 +302,17 @@ if [ "$LINUXCK" = "y" -o "$LINUXCK" = "Y" ]; then
 
     # Regenerate Grub configuration to include this new kernel
     grub-mkconfig -o /boot/grub/grub.cfg
+fi
+
+# Install VirtualBox Guest Modules if in a VBox VM
+if [ "$GUESTVM" = "y" -o "$GUESTVM" = "Y" ]; then
+    pacman -S --noconfirm --needed virtualbox-guest-modules virtualbox-guest-utils
+
+    VBOX_CONF="/etc/modules-load.d/virtualbox.conf"
+
+    echo "vboxguest" > "$VBOX_CONF"
+    echo "vboxsf" >> "$VBOX_CONF"
+    echo "vboxvideo" >> "$VBOX_CONF"
 fi
 
 # Install VirtualBox
