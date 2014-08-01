@@ -88,7 +88,9 @@ if [ -n "$USERNAME" ]; then
         usermod -a -G wheel $USERNAME
 
         # allow passworded sudo in the sudoers file
-        echo "Allow members of the wheel group sudo access" >> /etc/sudoers
+        echo "" >> /etc/sudoers
+        echo "# Added by setup script" >> /etc/sudoers
+        echo "# Allow members of the wheel group sudo access" >> /etc/sudoers
         echo "%wheel    ALL=(ALL) ALL" >> /etc/sudoers
 
         # lock the root account
