@@ -2,6 +2,38 @@
 
 ### This script is written for Arch Linux ###
 
+echo "This script will install a bunch of packages that Ben deems necessary for a proper system."
+
+# check for root.  Don't continue if we aren't root
+if [ "$(id -u)" != "0" ]; then
+    echo "Cannot setup system.  Must be root."
+    exit 1
+fi
+
+USERNAME=""
+
+if $(cat /etc/passwd | grep "1000" > /dev/null); then
+    USERNAME=$(cat /etc/passwd | grep "1000" | sed -e 's/:x:.*//g')
+    read -p "Is the name of your non-root user \"${USERNAME}\"? (Y/N): " CONF
+    if ! [ "$CONF" = "Y" -o "$CONF" = "y" ]; then
+        USERNAME=""
+    fi
+fi
+
+if [ -z "$USERNAME" ]; then
+    echo "Please enter the name of the non-root user you want to create (or leave blank for none)"
+    read -p "New user: " USERNAME
+
+    # Add the user to the groups if we're supposed to. Make sure the user exists
+    if [ -n "$USERNAME" ]; then
+        if ! $(cat /etc/passwd | grep "^${USERNAME}" >/dev/null); then
+            useradd -m "$USERNAME"
+            echo "Please enter a password for the user \"${USERNAME}\""
+            passwd $USERNAME
+        fi
+    fi
+fi
+
 aurinstall ()
 {
     AUR_DIR="$HOME/aur"
@@ -41,42 +73,10 @@ aurinstall ()
     fi
 
     cd "$output_dir"
-    makepkg --clean --syncdeps --needed --noconfirm --install
+    makepkg --asroot --clean --syncdeps --needed --noconfirm --install
     cp *.tar.* "$AUR_ARCHIVE_DIR"
 }
 
-
-echo "This script will install a bunch of packages that Ben deems necessary for a proper system."
-
-# check for root.  Don't continue if we aren't root
-if [ "$(id -u)" != "0" ]; then
-    echo "Cannot setup system.  Must be root."
-    exit 1
-fi
-
-USERNAME=""
-
-if $(cat /etc/passwd | grep "1000" > /dev/null); then
-    USERNAME=$(cat /etc/passwd | grep "1000" | sed -e 's/:x:.*//g')
-    read -p "Is the name of your non-root user \"${USERNAME}\"? (Y/N): " CONF
-    if ! [ "$CONF" = "Y" -o "$CONF" = "y" ]; then
-        USERNAME=""
-    fi
-fi
-
-if [ -z "$USERNAME" ]; then
-    echo "Please enter the name of the non-root user you want to create (or leave blank for none)"
-    read -p "New user: " USERNAME
-
-    # Add the user to the groups if we're supposed to. Make sure the user exists
-    if [ -n "$USERNAME" ]; then
-        if ! $(cat /etc/passwd | grep "^${USERNAME}" >/dev/null); then
-            useradd -m "$USERNAME"
-            echo "Please enter a password for the user \"${USERNAME}\""
-            passwd $USERNAME
-        fi
-    fi
-fi
 
 if [ -n "$USERNAME" ]; then
     read -p "Do you want to make \"$USERNAME\" a sudoer and lock the root accounts password?: " LOCK_ROOT
@@ -161,6 +161,7 @@ pacman -S --noconfirm --needed avahi
 pacman -S --noconfirm --needed nss-mdns
 pacman -S --noconfirm --needed openssh
 pacman -S --noconfirm --needed dnsutils
+pacman -S --noconfirm --needed lm_sensors
 
 pacman -S --noconfirm --needed pkgfile
 pkgfile --update
