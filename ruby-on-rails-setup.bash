@@ -12,4 +12,4 @@ pacman -S --needed --noconfirm ruby ruby-docs nodejs
 # setup for ruby gems
 echo ""
 echo "# Make sure ruby gems stuff is in the path" >> $HOME/.bashrc
-echo "export PATH=\"${PATH}:/opt/cisco/vpn/bin\"" >> $HOME/.bashrc
+echo "export PATH=\"$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH\"" >> $HOME/.bashrc
