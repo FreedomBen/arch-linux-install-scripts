@@ -13,3 +13,7 @@ pacman -S --needed --noconfirm ruby ruby-docs nodejs
 echo ""
 echo "# Make sure ruby gems stuff is in the path" >> $HOME/.bashrc
 echo "export PATH=\"$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH\"" >> $HOME/.bashrc
+
+# this needs to be run as the user!
+# install rails
+gem install rails
