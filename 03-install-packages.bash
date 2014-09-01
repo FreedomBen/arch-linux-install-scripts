@@ -128,6 +128,8 @@ if [ "$GUESTVM" != "Y" ] && [ "$GUESTVM" != "y" ]; then
         read -p "Do you want to install libvirt/QEMU anyway (without KVM)?: " LIBVIRT
         read -p "Do you want to install VirtualBox?: " VBOX
     fi
+
+    read -p "Do you want to install Docker?: " DOCKER
 fi
 
 # read -p "Do you want to install Netflix?: " NETFLIX
@@ -340,7 +342,7 @@ if [ "$VBOX" = "Y" -o "$VBOX" = "y" ]; then
     echo "vboxpci" >> "$VBOX_CONF"
 
     groupadd vboxusers
-    usermod -a -G vboxusers $USERNAME
+    [ -n "$USERNAME" ] && usermod -a -G vboxusers $USERNAME
 fi
 
 # Install libvirt
@@ -362,6 +364,22 @@ read -r -d '' VAR <<"EOF"
     });
 EOF
     echo "$VAR" > /etc/polkit-1/rules.d/50-org.libvirt.unix.manage.rules
+fi
+
+# Install docker
+DOCKER_SERVICE_DIR="/etc/systemd/system/docker.service.d"
+if [ "$DOCKER" = "Y" -o "$DOCKER" = "y" ]; then
+    pacman -S --noconfirm --needed docker
+    groupadd docker
+    [ -n "$USERNAME" ] && usermod -a -G docker $USERNAME
+
+    mkdir -p "$DOCKER_SERVICE_DIR"
+    cat << __EOF__ > "$DOCKER_SERVICE_DIR/lxc.conf"
+[Service]
+ExecStart=
+ExecStart=/usr/bin/docker -d -e lxc
+__EOF__
+
 fi
 
 # If in a VM like KVM/QEMU
@@ -398,6 +416,9 @@ if [ "$LIBVIRT" = "Y" -o "$LIBVIRT" = "y" ]; then
     systemctl enable libvirt-guests.service
 fi
 
+if [ "$DOCKER" = "Y" -o "$DOCKER" = "y" ]; then
+    systemctl enable docker.service
+fi
 
 if [ -f "setupArch-as-user.bash" ] && [ -n "$USERNAME" ]; then
     sudo -u $USERNAME setupArch-as-user.bash
