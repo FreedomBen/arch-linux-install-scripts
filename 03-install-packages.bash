@@ -373,12 +373,13 @@ if [ "$DOCKER" = "Y" -o "$DOCKER" = "y" ]; then
     groupadd docker
     [ -n "$USERNAME" ] && usermod -a -G docker $USERNAME
 
-    mkdir -p "$DOCKER_SERVICE_DIR"
-    cat << __EOF__ > "$DOCKER_SERVICE_DIR/lxc.conf"
-[Service]
-ExecStart=
-ExecStart=/usr/bin/docker -d -e lxc
-__EOF__
+    # Don't do this anymore
+    # mkdir -p "$DOCKER_SERVICE_DIR"
+    # cat << __EOF__ > "$DOCKER_SERVICE_DIR/lxc.conf"
+# [Service]
+# ExecStart=
+# ExecStart=/usr/bin/docker -d -e lxc
+# __EOF__
 
 fi
 
