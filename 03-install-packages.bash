@@ -176,6 +176,7 @@ yes "" | sensors-detect
 aurinstall "https://aur.archlinux.org/packages/co/cower/cower.tar.gz"
 aurinstall anything-sync-daemon
 aurinstall wavemon
+aurinstall aura-bin
 
 if [ "$INSYNC" = "Y" -o "$INSYNC" = "y" ]; then
     aurinstall insync
