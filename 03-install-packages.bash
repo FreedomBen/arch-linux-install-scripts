@@ -234,6 +234,7 @@ if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
     pacman -S --noconfirm --needed gst-plugins-bad
     pacman -S --noconfirm --needed gst-plugins-ugly
     pacman -S --noconfirm --needed vino vinagre # VLC server and remote viewer Gnome style
+    pacman -S --noconfirm --needed ttf-liberation # For google-chrome pdf rendering
 
     if [ "$LIBREOFFICE" = "y" -o "$LIBREOFFICE" = "Y" ]; then
         pacman -S --noconfirm --needed libreoffice-base libreoffice-calc libreoffice-common \
