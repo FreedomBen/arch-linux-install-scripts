@@ -99,6 +99,9 @@ if [ -n "$USERNAME" ]; then
 fi
 
 read -p "Are you installing this as a guest VirtualBox VM?" GUESTVM
+echo -e "\nThe linux-ck kernel provides the BFS and BFQ I/O and process schedulers that provide noticeable performance gains."
+echo "However it is only in the AUR so you will have to update it yourself regularly.  I recommend that you read the"
+echo "Arch wiki for more information: https://wiki.archlinux.org/index.php/linux-ck"
 read -p "Do you want to install the CK kernel?: " LINUXCK
 read -p "Do you want to install a graphical environment (Gnome)?: " GNOME
 read -p "Do you want to install the offline wiki docs? (around 130 MB): " OFFLINEDOCS
