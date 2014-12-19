@@ -167,6 +167,7 @@ pacman -S --noconfirm --needed nss-mdns
 pacman -S --noconfirm --needed openssh
 pacman -S --noconfirm --needed dnsutils
 pacman -S --noconfirm --needed screen
+pacman -S --noconfirm --needed tmux
 pacman -S --noconfirm --needed rfkill
 pacman -S --noconfirm --needed lsb-release
 
