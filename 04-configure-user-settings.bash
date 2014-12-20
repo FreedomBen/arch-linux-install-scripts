@@ -2,7 +2,7 @@
 
 ### This script is written for Arch Linux ###
 
-# check for root.  Don't continue if we are root
+# check for root.  Don't continue if we ARE root
 if [ "$(id -u)" = "0" ]; then
     echo "This script must NOT be run as root."
     exit 1
