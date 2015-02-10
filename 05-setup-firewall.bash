@@ -66,6 +66,8 @@ iptables -A INPUT -p tcp -j REJECT --reject-with tcp-rst
 # Reject all other protocols using ICMP
 iptables -A INPUT -j REJECT --reject-with icmp-proto-unreachable
 
+# Accept Eset server connections
+iptables -A TCP -p tcp --dport 2220 -j ACCEPT
 
 # Setup base rules
 read -p "Allow SSH? (default Yes) - (Y/N): " SSH
