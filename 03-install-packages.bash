@@ -240,6 +240,10 @@ if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
     pacman -S --noconfirm --needed vino vinagre # VLC server and remote viewer Gnome style
     pacman -S --noconfirm --needed ttf-liberation # For google-chrome pdf rendering
 
+    # X1 Carbon stuff
+    pacman -S --noconfirm --needed xf86-input-synaptics xdotool
+    pacman -S --noconfirm --needed xorg-xmodmap
+
     if [ "$LIBREOFFICE" = "y" -o "$LIBREOFFICE" = "Y" ]; then
         pacman -S --noconfirm --needed libreoffice-base libreoffice-calc libreoffice-common \
         libreoffice-draw libreoffice-en-US libreoffice-gnome libreoffice-impress libreoffice-math \
@@ -289,7 +293,6 @@ if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
             echo "$line" >> $tmpfile
         fi
     done < "/etc/psd.conf"
-
 fi
 
 if [ -n "$GROUPS" ] && [ -n "$USERNAME" ]; then
