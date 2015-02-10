@@ -398,7 +398,9 @@ fi
 # pacman -S --noconfirm libva-vdpau-driver nvidia-304xx
 
 # If Intel graphics card:
-# pacman -S --noconfirm libva-intel-driver xf86-video-intel
+if $(lspci | grep "VGA.*Intel" >/dev/null 2>&1); then
+  pacman -S --noconfirm libva-intel-driver xf86-video-intel
+fi
 
 
 # Enable desired services 
@@ -418,6 +420,7 @@ systemctl start sshd.service
 
 if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
     systemctl enable psd.service psd-resync.service
+    systemctl enable gdm.service
 fi
 
 if [ "$LIBVIRT" = "Y" -o "$LIBVIRT" = "y" ]; then
