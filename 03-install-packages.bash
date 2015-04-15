@@ -310,7 +310,7 @@ if [ "$LINUXCK" = "y" -o "$LINUXCK" = "Y" ]; then
     # Enable BFQ in the makepkg
     while read line; do
         if $(echo "$line" | grep "_BFQ_enable_" >/dev/null); then
-            echo "_BGQ_enable_=y" >> PKGBUILD.TMP
+            echo "_BFQ_enable_=y" >> PKGBUILD.TMP
         else
             echo "$line" >> PKGBUILD.TMP
         fi
