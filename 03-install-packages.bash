@@ -239,6 +239,7 @@ if [ "$GNOME" = "Y" -o "$GNOME" = "y" ]; then
     pacman -S --noconfirm --needed gst-plugins-ugly
     pacman -S --noconfirm --needed gst-libav
     pacman -S --noconfirm --needed file-roller
+    pacman -S --noconfirm --needed xarchiver
     pacman -S --noconfirm --needed vino vinagre # VLC server and remote viewer Gnome style
     pacman -S --noconfirm --needed ttf-liberation # For google-chrome pdf rendering
 
